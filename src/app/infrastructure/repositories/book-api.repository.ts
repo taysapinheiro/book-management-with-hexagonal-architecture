@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { IBookRepository } from "../../domain/ports/book.repository";
+import { IBookRepository } from '../../domain/ports/book.repository';
 import { IBook } from "../../domain/entities/book";
 import { firstValueFrom, map, Observable } from "rxjs";
 

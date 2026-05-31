@@ -1,4 +1,4 @@
-import { IBook } from "../entities/book";
+import { IBook } from '../entities/book';
 
 export interface IBookRepository {
   getAllBooks(): Promise<IBook[]>;
