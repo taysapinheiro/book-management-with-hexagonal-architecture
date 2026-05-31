@@ -1,59 +1,145 @@
-# HexagonalArchitecture
+# Gerenciador de Livros — Arquitetura Hexagonal
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.17.
+Projeto de estudo para aprender **Arquitetura Hexagonal** (Ports and Adapters) na prática, implementando um gerenciador de livros com operações CRUD.
 
-## Development server
+## Objetivo
 
-To start a local development server, run:
+Este repositório serve como laboratório para entender como separar regras de negócio de detalhes de infraestrutura e interface. O domínio é propositalmente simples — cadastro e gestão de livros — para que o foco fique na organização do código e nos conceitos arquiteturais, não na complexidade funcional.
+
+## Funcionalidades
+
+- **Criar** livros (título, autor, ISBN, ano de publicação)
+- **Listar** todos os livros cadastrados
+- **Atualizar** informações de um livro existente
+- **Remover** livros do acervo
+
+## Arquitetura Hexagonal
+
+A Arquitetura Hexagonal propõe isolar o **núcleo da aplicação** (domínio e casos de uso) das camadas externas (UI, banco de dados, APIs). A comunicação acontece por meio de **portas** (interfaces) e **adaptadores** (implementações concretas).
+
+```
+                    ┌─────────────────────────────────┐
+                    │         Driving Adapters        │
+                    │   (UI Angular, Controllers)     │
+                    └───────────────┬─────────────────┘
+                                    │
+                    ┌───────────────▼─────────────────┐
+                    │      Primary Ports (In)         │
+                    │   (Use Cases / Application)     │
+                    └───────────────┬─────────────────┘
+                                    │
+                    ┌───────────────▼─────────────────┐
+                    │            Domain               │
+                    │   (Entities, Value Objects)     │
+                    └───────────────┬─────────────────┘
+                                    │
+                    ┌───────────────▼─────────────────┐
+                    │     Secondary Ports (Out)       │
+                    │   (Repository interfaces)       │
+                    └───────────────┬─────────────────┘
+                                    │
+                    ┌───────────────▼─────────────────┐
+                    │        Driven Adapters          │
+                    │  (InMemory, LocalStorage, API)  │
+                    └─────────────────────────────────┘
+```
+
+### Camadas previstas
+
+| Camada | Responsabilidade | Exemplo |
+|--------|------------------|---------|
+| **Domain** | Entidades e regras de negócio puras | `Book`, validações de ISBN |
+| **Application** | Casos de uso que orquestram o domínio | `CreateBookUseCase`, `ListBooksUseCase` |
+| **Ports** | Contratos (interfaces) de entrada e saída | `BookRepository`, `CreateBookPort` |
+| **Adapters (In)** | Interface com o usuário | Componentes Angular, formulários |
+| **Adapters (Out)** | Persistência e serviços externos | `InMemoryBookRepository`, `LocalStorageBookRepository` |
+
+### Estrutura de pastas sugerida
+
+```
+src/
+├── app/
+│   ├── domain/
+│   │   ├── entities/
+│   │   │   └── book.ts
+│   │   └── value-objects/
+│   ├── application/
+│   │   └── use-cases/
+│   ├── ports/
+│   │   ├── in/
+│   │   └── out/
+│   ├── adapters/
+│   │   ├── in/
+│   │   │   └── ui/
+│   │   └── out/
+│   │       └── persistence/
+│   └── infrastructure/
+│       └── di/          # Injeção de dependências (providers)
+```
+
+## Modelo de domínio
+
+Entidade principal: **Book**
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | `string` | Identificador único |
+| `title` | `string` | Título do livro |
+| `author` | `string` | Nome do autor |
+| `isbn` | `string` | Código ISBN |
+| `publishedYear` | `number` | Ano de publicação |
+
+## Tecnologias
+
+- [Angular](https://angular.dev/) 20
+- TypeScript 5.9
+- RxJS
+
+## Pré-requisitos
+
+- [Node.js](https://nodejs.org/) (LTS recomendado)
+- npm (incluso com o Node.js)
+
+## Como executar
+
+Instale as dependências:
 
 ```bash
+npm install
+```
+
+Inicie o servidor de desenvolvimento:
+
+```bash
+npm start
+# ou
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Acesse `http://localhost:4200/` no navegador. A aplicação recarrega automaticamente ao alterar arquivos fonte.
 
-## Code scaffolding
+## Scripts disponíveis
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+| Comando | Descrição |
+|---------|-----------|
+| `npm start` | Servidor de desenvolvimento |
+| `npm run build` | Build de produção (saída em `dist/`) |
+| `npm test` | Testes unitários com Karma/Jasmine |
+| `npm run watch` | Build contínuo em modo development |
 
-```bash
-ng generate component component-name
-```
+## Conceitos para explorar neste projeto
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- **Inversão de dependência**: o domínio define interfaces; a infraestrutura as implementa
+- **Testabilidade**: casos de uso testáveis sem UI nem banco real (repositório in-memory)
+- **Substituição de adaptadores**: trocar persistência em memória por LocalStorage ou API sem alterar o domínio
+- **Separação de responsabilidades**: cada camada com um motivo claro para existir
 
-```bash
-ng generate --help
-```
+## Referências
 
-## Building
+- [Hexagonal Architecture — Alistair Cockburn](https://alistair.cockburn.us/hexagonal-architecture/)
+- [Angular Documentation](https://angular.dev/)
+- [Clean Architecture — Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
-To build the project run:
+## Licença
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Projeto de estudo pessoal.
