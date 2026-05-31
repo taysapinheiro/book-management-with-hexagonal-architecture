@@ -1,0 +1,39 @@
+{
+  "books": [
+    {
+      "id": "1",
+      "title": "Duna",
+      "author": "Frank Herbert",
+      "publishYear": 1965,
+      "synopsis": "Em um futuro distante, famílias nobres disputam o controle do planeta Arrakis."
+    },
+    {
+      "id": "2",
+      "title": "Fundação",
+      "author": "Isaac Asimov",
+      "publishYear": 1951,
+      "synopsis": "Hari Seldon prevê a queda do Império Galáctico."
+    },
+    {
+      "id": "3",
+      "title": "Neuromancer",
+      "author": "William Gibson",
+      "publishYear": 1984,
+      "synopsis": "Um hacker é contratado para uma missão envolvendo inteligência artificial."
+    },
+    {
+      "id": "4",
+      "title": "Solaris",
+      "author": "Stanisław Lem",
+      "publishYear": 1961,
+      "synopsis": "Uma equipe espacial tenta compreender uma inteligência alienígena."
+    },
+    {
+      "id": "5",
+      "title": "O Fim da Infância",
+      "author": "Arthur C. Clarke",
+      "publishYear": 1953,
+      "synopsis": "Alienígenas chegam à Terra e mudam o destino da humanidade."
+    }
+  ]
+}
